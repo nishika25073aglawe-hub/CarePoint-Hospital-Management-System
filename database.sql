@@ -1,0 +1,393 @@
+
+-- WARNING: This resets the existing hospital_management database.
+DROP DATABASE IF EXISTS hospital_management;
+CREATE DATABASE hospital_management;
+USE hospital_management;
+
+-- 1. ADMINS
+CREATE TABLE admins (
+    admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+-- 2. PATIENTS
+CREATE TABLE patients (
+    patient_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age INT,
+    sex VARCHAR(20),
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(20),
+    password_hash VARCHAR(255)
+);
+
+-- 3. DEPARTMENTS
+CREATE TABLE departments (
+    department_id INT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR(255)
+);
+
+-- 4. DOCTORS
+CREATE TABLE doctors (
+    doctor_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    specialization VARCHAR(100) NOT NULL,
+    experience INT DEFAULT 0,
+    department_id INT,
+    email VARCHAR(150) UNIQUE,
+    FOREIGN KEY (department_id)
+        REFERENCES departments(department_id)
+);
+
+-- 5. DOCTOR SCHEDULES
+CREATE TABLE doctor_schedules (
+    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
+    doctor_id INT NOT NULL,
+    day_of_week VARCHAR(15) NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    FOREIGN KEY (doctor_id)
+        REFERENCES doctors(doctor_id)
+);
+
+-- 6. APPOINTMENT SLOTS
+CREATE TABLE appointment_slots (
+    slot_id INT AUTO_INCREMENT PRIMARY KEY,
+    doctor_id INT NOT NULL,
+    slot_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    is_booked BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE (doctor_id, slot_date, start_time),
+    FOREIGN KEY (doctor_id)
+        REFERENCES doctors(doctor_id)
+);
+
+-- 7. APPOINTMENTS
+CREATE TABLE appointments (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    slot_id INT NOT NULL UNIQUE,
+    status VARCHAR(30) NOT NULL DEFAULT 'Booked',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (patient_id)
+        REFERENCES patients(patient_id),
+    FOREIGN KEY (slot_id)
+        REFERENCES appointment_slots(slot_id)
+);
+
+-- 8. MEDICAL RECORDS
+CREATE TABLE medical_records (
+    record_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    appointment_id INT,
+    diagnosis VARCHAR(255) NOT NULL,
+    notes TEXT,
+    record_date DATE NOT NULL,
+    FOREIGN KEY (patient_id)
+        REFERENCES patients(patient_id),
+    FOREIGN KEY (doctor_id)
+        REFERENCES doctors(doctor_id),
+    FOREIGN KEY (appointment_id)
+        REFERENCES appointments(appointment_id)
+);
+
+-- 9. PRESCRIPTIONS
+CREATE TABLE prescriptions (
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    appointment_id INT,
+    instructions TEXT,
+    prescribed_at DATE NOT NULL,
+    FOREIGN KEY (patient_id)
+        REFERENCES patients(patient_id),
+    FOREIGN KEY (doctor_id)
+        REFERENCES doctors(doctor_id),
+    FOREIGN KEY (appointment_id)
+        REFERENCES appointments(appointment_id)
+);
+
+-- 10. MEDICINES
+CREATE TABLE medicines (
+    medicine_id INT AUTO_INCREMENT PRIMARY KEY,
+    medicine_name VARCHAR(150) NOT NULL,
+    category VARCHAR(100),
+    stock_quantity INT NOT NULL DEFAULT 0,
+    unit_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+    expiry_date DATE
+);
+
+-- 11. PRESCRIPTION ITEMS
+CREATE TABLE prescription_items (
+    prescription_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    prescription_id INT NOT NULL,
+    medicine_id INT NOT NULL,
+    dosage VARCHAR(100),
+    frequency VARCHAR(100),
+    duration_days INT,
+    quantity INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (prescription_id)
+        REFERENCES prescriptions(prescription_id),
+    FOREIGN KEY (medicine_id)
+        REFERENCES medicines(medicine_id)
+);
+
+-- 12. MEDICAL REPORTS
+CREATE TABLE medical_reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT,
+    appointment_id INT,
+    report_type VARCHAR(100) NOT NULL,
+    report_details TEXT,
+    report_date DATE NOT NULL,
+    FOREIGN KEY (patient_id)
+        REFERENCES patients(patient_id),
+    FOREIGN KEY (doctor_id)
+        REFERENCES doctors(doctor_id),
+    FOREIGN KEY (appointment_id)
+        REFERENCES appointments(appointment_id)
+);
+
+-- 13. WARDS
+CREATE TABLE wards (
+    ward_id INT AUTO_INCREMENT PRIMARY KEY,
+    ward_name VARCHAR(100) NOT NULL UNIQUE,
+    ward_type VARCHAR(30) NOT NULL,
+    location VARCHAR(100)
+);
+
+-- 14. BEDS
+CREATE TABLE beds (
+    bed_id INT AUTO_INCREMENT PRIMARY KEY,
+    ward_id INT NOT NULL,
+    bed_number VARCHAR(20) NOT NULL,
+    is_movable BOOLEAN NOT NULL DEFAULT FALSE,
+    status VARCHAR(30) NOT NULL DEFAULT 'Available',
+    UNIQUE (ward_id, bed_number),
+    FOREIGN KEY (ward_id)
+        REFERENCES wards(ward_id)
+);
+
+-- 15. AMBULANCES
+CREATE TABLE ambulances (
+    ambulance_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_number VARCHAR(30) NOT NULL UNIQUE,
+    driver_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    status VARCHAR(30) NOT NULL DEFAULT 'Available'
+);
+
+-- =========================================
+-- DUMMY DATA FOR ALL 15 TABLES
+-- =========================================
+
+-- 1. Admins
+INSERT INTO admins (name, email, password_hash) VALUES
+('Hospital Admin', 'admin@carepoint.com', 'DEMO_HASH_REPLACE_BEFORE_PRODUCTION');
+
+-- 2. Patients
+INSERT INTO patients (name, age, sex, email, phone, password_hash) VALUES
+('Aarav Sharma', 22, 'Male', 'aarav@example.com', '9876500001', 'DEMO_HASH'),
+('Diya Verma', 25, 'Female', 'diya@example.com', '9876500002', 'DEMO_HASH'),
+('Kabir Singh', 31, 'Male', 'kabir@example.com', '9876500003', 'DEMO_HASH'),
+('Ananya Gupta', 28, 'Female', 'ananya@example.com', '9876500004', 'DEMO_HASH'),
+('Rohan Mehta', 40, 'Male', 'rohan@example.com', '9876500005', 'DEMO_HASH');
+
+-- 3. Departments
+INSERT INTO departments (department_name, description) VALUES
+('Cardiology', 'Heart and cardiovascular care'),
+('Neurology', 'Brain and nervous system care'),
+('Dermatology', 'Skin and hair care'),
+('Orthopedics', 'Bone and joint care'),
+('Pediatrics', 'Medical care for children'),
+('ENT', 'Ear, nose and throat care');
+
+-- 4. Doctors
+INSERT INTO doctors
+(name, specialization, experience, department_id, email) VALUES
+('Ananya Sharma', 'Cardiologist', 10, 1, 'ananya.sharma@carepoint.com'),
+('Rahul Verma', 'Neurologist', 8, 2, 'rahul.verma@carepoint.com'),
+('Priya Mehta', 'Dermatologist', 6, 3, 'priya.mehta@carepoint.com'),
+('Arjun Kapoor', 'Orthopedic', 12, 4, 'arjun.kapoor@carepoint.com'),
+('Neha Singh', 'Pediatrician', 7, 5, 'neha.singh@carepoint.com'),
+('Karan Malhotra', 'ENT Specialist', 9, 6, 'karan.malhotra@carepoint.com');
+
+-- 5. Doctor schedules
+INSERT INTO doctor_schedules
+(doctor_id, day_of_week, start_time, end_time) VALUES
+(1, 'Monday', '09:00:00', '13:00:00'),
+(2, 'Tuesday', '10:00:00', '14:00:00'),
+(3, 'Wednesday', '09:00:00', '13:00:00'),
+(4, 'Thursday', '11:00:00', '15:00:00'),
+(5, 'Friday', '09:00:00', '12:00:00'),
+(6, 'Saturday', '10:00:00', '14:00:00');
+
+-- 6. Appointment slots
+-- Future dates make the booking API testable.
+INSERT INTO appointment_slots
+(doctor_id, slot_date, start_time, is_booked) VALUES
+(1, '2026-11-05', '09:00:00', TRUE),
+(1, '2026-11-05', '09:30:00', FALSE),
+(2, '2026-11-06', '10:00:00', TRUE),
+(2, '2026-11-06', '10:30:00', FALSE),
+(3, '2026-11-07', '09:00:00', FALSE),
+(3, '2026-11-07', '09:30:00', FALSE),
+(4, '2026-11-09', '11:00:00', TRUE),
+(4, '2026-11-09', '11:30:00', FALSE),
+(5, '2026-11-10', '09:00:00', FALSE),
+(6, '2026-11-11', '10:00:00', FALSE);
+
+-- 7. Appointments
+-- Slot IDs 1, 3 and 7 are marked as booked above.
+INSERT INTO appointments (patient_id, slot_id, status) VALUES
+(1, 1, 'Booked'),
+(2, 3, 'Booked'),
+(3, 7, 'Booked');
+
+-- 8. Medical records
+INSERT INTO medical_records
+(patient_id, doctor_id, appointment_id, diagnosis, notes, record_date) VALUES
+(1, 1, 1, 'High blood pressure', 'Routine check-up advised', '2026-10-20'),
+(2, 2, 2, 'Migraine', 'Follow-up recommended', '2026-10-21'),
+(3, 4, 3, 'Knee pain', 'Rest and review advised', '2026-10-22');
+
+-- 9. Prescriptions
+INSERT INTO prescriptions
+(patient_id, doctor_id, appointment_id, instructions, prescribed_at) VALUES
+(1, 1, 1, 'Take medication as directed by the physician.', '2026-10-20'),
+(2, 2, 2, 'Follow the clinician instructions.', '2026-10-21'),
+(3, 4, 3, 'Use medication only as prescribed.', '2026-10-22');
+
+-- 10. Medicines
+INSERT INTO medicines
+(medicine_name, category, stock_quantity, unit_price, expiry_date) VALUES
+('Paracetamol', 'Pain relief', 200, 2.50, '2027-12-31'),
+('Cetirizine', 'Antihistamine', 120, 3.00, '2027-08-31'),
+('Vitamin B Complex', 'Supplement', 90, 5.00, '2027-10-31'),
+('Antacid Tablets', 'Antacid', 150, 4.00, '2027-06-30'),
+('Saline Solution', 'Medical supplies', 60, 25.00, '2027-05-31');
+
+-- 11. Prescription items
+INSERT INTO prescription_items
+(prescription_id, medicine_id, dosage, frequency, duration_days, quantity) VALUES
+(1, 3, 'As prescribed', 'As directed', 5, 10),
+(2, 1, 'As prescribed', 'As directed', 3, 6),
+(3, 4, 'As prescribed', 'As directed', 5, 10);
+
+-- 12. Medical reports
+INSERT INTO medical_reports
+(patient_id, doctor_id, appointment_id, report_type, report_details, report_date) VALUES
+(1, 1, 1, 'Blood Test', 'Demo report: see attached laboratory result in a real deployment.', '2026-10-20'),
+(2, 2, 2, 'Neurology Assessment', 'Demo report for project testing.', '2026-10-21'),
+(3, 4, 3, 'X-Ray', 'Demo report: imaging file would be stored separately.', '2026-10-22');
+
+-- 13. Wards
+INSERT INTO wards (ward_name, ward_type, location) VALUES
+('General Ward A', 'Public', 'Ground Floor'),
+('Private Ward B', 'Private', 'First Floor'),
+('Emergency Ward', 'Public', 'Ground Floor');
+
+-- 14. Beds
+INSERT INTO beds (ward_id, bed_number, is_movable, status) VALUES
+(1, 'A-101', FALSE, 'Available'),
+(1, 'A-102', TRUE, 'Occupied'),
+(2, 'B-201', FALSE, 'Available'),
+(2, 'B-202', FALSE, 'Maintenance'),
+(3, 'E-301', TRUE, 'Available');
+
+-- 15. Ambulances
+INSERT INTO ambulances (vehicle_number, driver_name, phone, status) VALUES
+('DL01AB1234', 'Suresh Kumar', '9876510001', 'Available'),
+('DL01AB5678', 'Mohan Lal', '9876510002', 'On Trip'),
+('DL01AB9012', 'Vikas Yadav', '9876510003', 'Maintenance');
+
+-- Check that all 15 tables exist
+SHOW TABLES;
+
+USE hospital_management;
+
+SELECT 'admins' AS table_name, COUNT(*) AS total FROM admins
+UNION ALL SELECT 'patients', COUNT(*) FROM patients
+UNION ALL SELECT 'departments', COUNT(*) FROM departments
+UNION ALL SELECT 'doctors', COUNT(*) FROM doctors
+UNION ALL SELECT 'doctor_schedules', COUNT(*) FROM doctor_schedules
+UNION ALL SELECT 'appointment_slots', COUNT(*) FROM appointment_slots
+UNION ALL SELECT 'appointments', COUNT(*) FROM appointments
+UNION ALL SELECT 'medical_records', COUNT(*) FROM medical_records
+UNION ALL SELECT 'prescriptions', COUNT(*) FROM prescriptions
+UNION ALL SELECT 'medicines', COUNT(*) FROM medicines
+UNION ALL SELECT 'prescription_items', COUNT(*) FROM prescription_items
+UNION ALL SELECT 'medical_reports', COUNT(*) FROM medical_reports
+UNION ALL SELECT 'wards', COUNT(*) FROM wards
+UNION ALL SELECT 'beds', COUNT(*) FROM beds
+UNION ALL SELECT 'ambulances', COUNT(*) FROM ambulances;
+
+SELECT patient_id, name, email
+FROM patients
+ORDER BY patient_id;
+
+SELECT appointment_id, patient_id, slot_id, status
+FROM appointments
+ORDER BY appointment_id;
+
+SELECT
+    slot_id,
+    doctor_id,
+    slot_date,
+    start_time,
+    is_booked
+FROM appointment_slots
+ORDER BY slot_id;
+
+SELECT
+    s.slot_id,
+    s.is_booked,
+    a.appointment_id,
+    a.patient_id,
+    p.name AS patient_name
+FROM appointment_slots s
+LEFT JOIN appointments a ON s.slot_id = a.slot_id
+LEFT JOIN patients p ON a.patient_id = p.patient_id
+WHERE s.is_booked = TRUE
+ORDER BY s.slot_id;
+
+SELECT * FROM ambulances;
+
+SELECT ambulance_id, vehicle_number, status
+FROM ambulances
+WHERE ambulance_id = 1;
+
+SELECT * FROM ambulances;
+
+SELECT
+    b.bed_id,
+    b.bed_number,
+    w.ward_name,
+    w.ward_type,
+    w.location,
+    b.is_movable,
+    b.status
+FROM beds b
+JOIN wards w
+    ON b.ward_id = w.ward_id
+ORDER BY b.bed_id;
+
+SELECT bed_id, bed_number, status
+FROM beds
+ORDER BY bed_id;
+
+
+SELECT bed_id, bed_number, status
+FROM beds
+ORDER BY bed_id;
+
+
+DESCRIBE patients;
+
+
+

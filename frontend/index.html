@@ -1,0 +1,3261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePoint | Hospital Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #243247;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 235px;
+            background: #102a43;
+            color: white;
+            padding: 28px 16px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: bold;
+            margin: 0 8px 8px;
+        }
+
+        .brand span {
+            color: #48d6c6;
+        }
+
+        .tagline {
+            color: #b8c7d9;
+            font-size: 12px;
+            margin: 0 8px 35px;
+        }
+
+        .nav-label {
+            color: #91a5bb;
+            font-size: 11px;
+            margin: 20px 10px 10px;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 13px 12px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #dce7f2;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: #24516d;
+            color: white;
+        }
+
+        main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .muted {
+            color: #758397;
+            font-size: 13px;
+        }
+
+        .admin-chip {
+            background: white;
+            padding: 11px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            box-shadow: 0 3px 12px #172b4d0b;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            font-size: 21px;
+            margin-bottom: 7px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card,
+        .panel {
+            background: white;
+            border: 1px solid #e7edf4;
+            border-radius: 13px;
+            padding: 22px;
+            box-shadow: 0 4px 14px #172b4d08;
+        }
+
+        .stat-card .stat-name {
+            color: #758397;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 31px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-note {
+            font-size: 12px;
+            color: #138a7e;
+        }
+
+        .panel {
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .panel-header h3 {
+            font-size: 17px;
+        }
+
+        .text-btn {
+            color: #087f8c;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        th {
+            color: #748398;
+            background: #f7f9fc;
+            font-weight: 600;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf1f6;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pill {
+            display: inline-block;
+            background: #e1f7ef;
+            color: #167d60;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field label {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dbe3ed;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #a4e6df;
+            border-color: #159b99;
+        }
+
+        .primary-btn {
+            padding: 12px 18px;
+            background: #087f8c;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .primary-btn:hover {
+            background: #066b75;
+        }
+
+        .form-actions {
+            margin-top: 22px;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .empty {
+            padding: 22px;
+            text-align: center;
+            color: #758397;
+        }
+
+        @media (max-width: 850px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .tagline {
+                margin-bottom: 15px;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .nav-btn {
+                display: inline-block;
+                width: auto;
+                margin: 3px;
+            }
+
+            main {
+                padding: 16px;
+            }
+
+            .stats,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar h1 {
+                font-size: 22px;
+            }
+        }
+
+        /* HIDE DASHBOARD BEFORE LOGIN */
+
+.layout {
+    display: none;
+}
+        /* LOGIN SCREEN */
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f1f5f9;
+}
+
+.login-box {
+    width: 380px;
+    padding: 35px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.login-box h1 {
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.login-box h1 span {
+    color: #2563eb;
+}
+
+.login-box > p {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.login-box h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.login-box label {
+    display: block;
+    margin: 12px 0 6px;
+    font-weight: 600;
+}
+
+.login-box input,
+.login-box select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#loginMessage {
+    margin-top: 12px;
+    text-align: center;
+}
+    </style>
+</head>
+
+<body>
+
+<div id="loginScreen">
+    <div class="login-box">
+        <h1>Care<span>Point</span></h1>
+        <p>Hospital Management System</p>
+
+        <h2>Login to your account</h2>
+
+        <form id="loginForm">
+            <label>Email</label>
+            <input type="email" id="loginEmail"
+                   placeholder="Enter your email" required>
+
+            <label>Password</label>
+            <input type="password" id="loginPassword"
+                   placeholder="Enter your password" required>
+
+            <label>Login as</label>
+            <select id="loginRole" required>
+                <option value="">Select Role</option>
+                <option value="admin">Administrator</option>
+                <option value="doctor">Doctor</option>
+                <option value="patient">Patient</option>
+            </select>
+
+            <button type="submit">Login</button>
+            <p id="loginMessage"></p>
+        </form>
+    </div>
+</div>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">Care<span>Point</span></div>
+        <div class="tagline">Hospital Management System</div>
+
+        <div class="nav-label">MAIN MENU</div>
+
+        <button class="nav-btn active" data-page="dashboard">
+            ◫ &nbsp; Dashboard
+        </button>
+
+        <button class="nav-btn" data-page="doctors">
+            ♙ &nbsp; Doctors
+        </button>
+
+        <button class="nav-btn" data-page="appointments">
+            ▦ &nbsp; Appointments
+        </button>
+
+        <button class="nav-btn" data-page="book">
+            + &nbsp; Book Appointment
+        </button>
+
+        <button class="nav-btn" data-page="ambulances">
+            🚑 &nbsp; Ambulances
+        </button>
+                
+        <button class="nav-btn" data-page="beds">
+            🛏️ &nbsp; Beds & Wards
+        </button>
+
+        
+        <button class="nav-btn" data-page="patients">
+            ♙ &nbsp; Patients
+        </button>
+
+        <button class="nav-btn" data-page="medical">
+            📋 &nbsp; Medical Records & Reports
+        </button>
+
+        <button class="nav-btn" data-page="pharmacy">
+            💊 &nbsp; Pharmacy Management
+        </button>
+
+        <button class="nav-btn" data-page="prescriptions">
+            💊 &nbsp; Prescriptions
+        </button>
+
+        <button class="nav-btn" data-page="patient-portal">
+            👤 &nbsp; Patient Portal
+        </button>
+
+        <button class="nav-btn" data-page="doctor-portal">
+            🩺 &nbsp; Doctor Portal
+        </button>
+
+
+    </aside>
+
+    <main>
+        <header class="topbar">
+            <div>
+                <h1 id="page-title">Dashboard Overview</h1>
+                <p class="muted">Welcome to your hospital management portal.</p>
+            </div>
+
+            <div class="admin-chip">● &nbsp; Administrator</div>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section class="page active" id="dashboard">
+
+            <div class="section-heading">
+                <h2>Hospital at a glance</h2>
+                <p class="muted">Live information from your database APIs.</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-name">Total Doctors</div>
+                    <div class="stat-number" id="doctor-count">—</div>
+                    <div class="stat-note">Registered doctors</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-name">Appointments</div>
+                    <div class="stat-number" id="appointment-count">—</div>
+                    <div class="stat-note">Recorded appointments</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-name">Backend Status</div>
+                    <div class="stat-number" id="backend-status"
+                         style="font-size:22px">Checking...</div>
+                    <div class="stat-note">MySQL connection</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recent Appointments</h3>
+                    <button class="text-btn" data-go="appointments">
+                        View all →
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-appointments">
+                            <tr>
+                                <td colspan="5" class="empty">
+                                    Loading appointments...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCTORS -->
+        <section class="page" id="doctors">
+            <div class="section-heading">
+                <h2>Doctor Directory</h2>
+                <p class="muted">Doctors registered in the hospital database.</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Available Doctors</h3>
+                    <button class="text-btn" id="refresh-doctors">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Doctor Name</th>
+                                <th>Specialization</th>
+                                <th>Experience</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctors-table">
+                            <tr>
+                                <td colspan="5" class="empty">
+                                    Loading doctors...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- APPOINTMENTS -->
+        <section class="page" id="appointments">
+            <div class="section-heading">
+                <h2>Appointments</h2>
+                <p class="muted">View patient bookings and appointment status.</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>All Appointments</h3>
+                    <button class="text-btn" id="refresh-appointments">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table">
+                            <tr>
+                                <td colspan="6" class="empty">
+                                    Loading appointments...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOK APPOINTMENT -->
+        <section class="page" id="book">
+            <div class="section-heading">
+                <h2>Book an Appointment</h2>
+                <p class="muted">
+                    Choose a patient, doctor and available time slot.
+                </p>
+            </div>
+
+            <div class="panel">
+                <form id="booking-form">
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label for="patient-id">Patient ID</label>
+                            <input
+                                type="number"
+                                id="patient-id"
+                                min="1"
+                                placeholder="Enter your patient ID"
+                                required
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="doctor-select">Choose Doctor</label>
+                            <select id="doctor-select" required>
+                                <option value="">Loading doctors...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="slot-select">Available Slot</label>
+                            <select id="slot-select" required disabled>
+                                <option value="">Choose a doctor first</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn">
+                            Confirm Appointment
+                        </button>
+                    </div>
+
+                    <p id="booking-message" class="message"></p>
+                </form>
+            </div>
+        </section>
+        
+<!-- AMBULANCES -->
+<section class="page" id="ambulances">
+    <div class="section-heading">
+        <h2>Ambulance Management</h2>
+        <p class="muted">
+            View ambulances and update their availability status.
+        </p>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Registered Ambulances</h3>
+            <button class="text-btn" id="refresh-ambulances">
+                ↻ Refresh
+            </button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vehicle Number</th>
+                        <th>Driver Name</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ambulances-table">
+                    <tr>
+                        <td colspan="5" class="empty">
+                            Loading ambulances...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p id="ambulance-message" class="message"></p>
+    </div>
+</section>
+    
+<!-- BEDS AND WARDS -->
+<section class="page" id="beds">
+    <div class="section-heading">
+        <h2>Beds and Wards Management</h2>
+        <p class="muted">
+            View bed allocation details and manage bed availability.
+        </p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-name">Total Beds</div>
+            <div class="stat-number" id="total-beds">—</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-name">Available Beds</div>
+            <div class="stat-number" id="available-beds">—</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-name">Occupied Beds</div>
+            <div class="stat-number" id="occupied-beds">—</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Bed Directory</h3>
+            <button class="text-btn" id="refresh-beds">↻ Refresh</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bed No.</th>
+                        <th>Ward</th>
+                        <th>Ward Type</th>
+                        <th>Location</th>
+                        <th>Movable</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="beds-table">
+                    <tr>
+                        <td colspan="6" class="empty">Loading beds...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p id="beds-message" class="message"></p>
+    </div>
+</section>
+
+         
+<!-- PATIENT MANAGEMENT -->
+<section class="page" id="patients">
+    <div class="section-heading">
+        <h2>Patient Management</h2>
+        <p class="muted">View and register hospital patients.</p>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Register New Patient</h3>
+        </div>
+
+        <form id="patient-form">
+            <div class="form-grid">
+                <input name="name" placeholder="Patient name" required />
+                <input name="age" type="number" min="0" max="130"
+                       placeholder="Age" />
+                <select name="sex">
+                    <option value="">Select sex</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input name="email" type="email" placeholder="Email" />
+                <input name="phone" type="tel" placeholder="Phone number" />
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Add Patient
+            </button>
+            <p id="patient-form-message" class="message"></p>
+        </form>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Registered Patients</h3>
+            <button type="button" class="text-btn" id="refresh-patients">
+                ↻ Refresh
+            </button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Sex</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody id="patients-table">
+                    <tr>
+                        <td colspan="6" class="empty">Loading patients...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<!-- MEDICAL RECORDS & REPORTS PAGE -->
+<section class="page" id="medical">
+
+    <!-- Medical Records -->
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Add Medical Record</h2>
+        </div>
+
+        <form id="medicalRecordForm">
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Patient</label>
+                    <select id="recordPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Doctor</label>
+                    <select id="recordDoctor" required>
+                        <option value="">Select Doctor</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Appointment ID (Optional)</label>
+                    <input type="number" id="recordAppointment">
+                </div>
+
+                <div class="field">
+                    <label>Diagnosis</label>
+                    <input type="text" id="recordDiagnosis" required>
+                </div>
+
+                <div class="field">
+                    <label>Record Date</label>
+                    <input type="date" id="recordDate" required>
+                </div>
+
+                <div class="field">
+                    <label>Notes</label>
+                    <textarea id="recordNotes"></textarea>
+                </div>
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Add Medical Record
+            </button>
+
+            <p id="recordMessage" class="message"></p>
+        </form>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Medical Records</h2>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Diagnosis</th>
+                        <th>Notes</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="medicalRecordsBody">
+                    <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Medical Reports -->
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Add Medical Report</h2>
+        </div>
+
+        <form id="medicalReportForm">
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Patient</label>
+                    <select id="reportPatient" required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Doctor (Optional)</label>
+                    <select id="reportDoctor">
+                        <option value="">Select Doctor</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Appointment ID (Optional)</label>
+                    <input type="number" id="reportAppointment">
+                </div>
+
+                <div class="field">
+                    <label>Report Type</label>
+                    <input type="text" id="reportType" required>
+                </div>
+
+                <div class="field">
+                    <label>Report Date</label>
+                    <input type="date" id="reportDate" required>
+                </div>
+
+                <div class="field">
+                    <label>Report Details</label>
+                    <textarea id="reportDetails"></textarea>
+                </div>
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Add Medical Report
+            </button>
+
+            <p id="reportMessage" class="message"></p>
+        </form>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Medical Reports</h2>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Report Type</th>
+                        <th>Details</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="medicalReportsBody">
+                    <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- PHARMACY MANAGEMENT PAGE -->
+<section class="page" id="pharmacy">
+
+    <!-- Inventory Summary -->
+    <div class="form-grid">
+
+        <div class="panel">
+            <h3>Total Medicines</h3>
+            <h2 id="totalMedicines">0</h2>
+        </div>
+
+        <div class="panel">
+            <h3>Low Stock Medicines</h3>
+            <h2 id="lowStockMedicines">0</h2>
+        </div>
+
+        <div class="panel">
+            <h3>Out of Stock</h3>
+            <h2 id="outOfStockMedicines">0</h2>
+        </div>
+
+    </div>
+
+    <!-- Add Medicine Form -->
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Add New Medicine</h2>
+        </div>
+
+        <form id="medicineForm">
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Medicine Name</label>
+                    <input type="text" id="medicineName" required>
+                </div>
+
+                <div class="field">
+                    <label>Category</label>
+                    <input type="text" id="medicineCategory">
+                </div>
+
+                <div class="field">
+                    <label>Stock Quantity</label>
+                    <input type="number" id="medicineStock" min="0" required>
+                </div>
+
+                <div class="field">
+                    <label>Unit Price (₹)</label>
+                    <input type="number" id="medicinePrice" min="0" step="0.01" required>
+                </div>
+
+                <div class="field">
+                    <label>Expiry Date</label>
+                    <input type="date" id="medicineExpiry">
+                </div>
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Add Medicine
+            </button>
+
+            <p id="medicineMessage" class="message"></p>
+
+        </form>
+    </div>
+
+    <!-- Medicine Inventory Table -->
+    <div class="panel">
+
+        <div class="panel-header">
+            <h2>Medicine Inventory</h2>
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Medicine Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Unit Price</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="medicinesBody">
+                    <tr>
+                        <td colspan="7">Loading medicines...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PRESCRIPTION MANAGEMENT PAGE -->
+<section id="prescriptions" class="page">
+
+    <div class="section-header">
+        <h2>Prescription Management</h2>
+        <p>Create and manage patient prescriptions</p>
+    </div>
+
+    <!-- Add Prescription Form -->
+    <div class="card">
+        <h3>Create New Prescription</h3>
+
+        <form id="prescriptionForm">
+
+            <div class="form-group">
+                <label>Patient</label>
+                <select id="prescriptionPatient" required>
+                    <option value="">Select Patient</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Doctor</label>
+                <select id="prescriptionDoctor" required>
+                    <option value="">Select Doctor</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Appointment ID (Optional)</label>
+                <input type="number" id="prescriptionAppointment">
+            </div>
+
+            <div class="form-group">
+                <label>Prescription Date</label>
+                <input type="date" id="prescriptionDate" required>
+            </div>
+
+            <div class="form-group">
+                <label>Instructions</label>
+                <textarea id="prescriptionInstructions"
+                    placeholder="Enter prescription instructions"></textarea>
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Create Prescription
+            </button>
+
+            <p id="prescriptionMessage"></p>
+
+        </form>
+    </div>
+
+    <!-- Prescription List -->
+    <div class="card">
+        <h3>Existing Prescriptions</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Appointment</th>
+                    <th>Instructions</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody id="prescriptionsBody">
+                <tr>
+                    <td colspan="6">Loading prescriptions...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<!-- ADD MEDICINE TO PRESCRIPTION -->
+<div class="card">
+    <h3>Add Medicine to Prescription</h3>
+
+    <form id="prescriptionItemForm">
+
+        <div class="form-group">
+            <label>Select Prescription</label>
+            <select id="itemPrescription" required>
+                <option value="">Select Prescription</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Medicine</label>
+            <select id="itemMedicine" required>
+                <option value="">Select Medicine</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Dosage</label>
+            <input type="text" id="itemDosage"
+                placeholder="e.g. 500 mg" required>
+        </div>
+
+        <div class="form-group">
+            <label>Frequency</label>
+            <input type="text" id="itemFrequency"
+                placeholder="e.g. Twice daily" required>
+        </div>
+
+        <div class="form-group">
+            <label>Duration (Days)</label>
+            <input type="number" id="itemDuration"
+                min="1" placeholder="e.g. 5" required>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="itemQuantity"
+                min="1" placeholder="e.g. 10" required>
+        </div>
+
+        <button type="submit" class="primary-btn">
+            Add Medicine
+        </button>
+
+        <p id="prescriptionItemMessage"></p>
+
+    </form>
+</div>
+
+<!-- PRESCRIPTION ITEMS TABLE -->
+<div class="card">
+    <h3>Prescribed Medicines</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Prescription ID</th>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Duration</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+
+        <tbody id="prescriptionItemsBody">
+            <tr>
+                <td colspan="6">Loading prescribed medicines...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</section>
+
+
+<!-- PATIENT PORTAL -->
+<section id="patient-portal" class="page">
+
+    <!-- SELECT PATIENT -->
+    <div class="card">
+        <h3>Patient Portal</h3>
+
+        <div class="form-group">
+            <label>Select Patient</label>
+            <select id="portalPatient">
+                <option value="">Select Patient</option>
+            </select>
+        </div>
+
+        <p>Select a patient to view their personal hospital information.</p>
+    </div>
+
+    <!-- PATIENT APPOINTMENTS -->
+    <div class="card">
+        <h3>My Appointments</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="portalAppointmentsBody">
+                <tr>
+                    <td colspan="4">Select a patient first.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PATIENT PRESCRIPTIONS -->
+    <div class="card">
+        <h3>My Prescriptions</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Prescription ID</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Instructions</th>
+                </tr>
+            </thead>
+            <tbody id="portalPrescriptionsBody">
+                <tr>
+                    <td colspan="4">Select a patient first.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MEDICAL RECORDS -->
+    <div class="card">
+        <h3>My Medical Records</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Record ID</th>
+                    <th>Doctor</th>
+                    <th>Details</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="portalMedicalRecordsBody">
+                <tr>
+                    <td colspan="4">Select a patient first.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MEDICAL REPORTS -->
+    <div class="card">
+        <h3>My Medical Reports</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Report ID</th>
+                    <th>Report Type</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody id="portalMedicalReportsBody">
+                <tr>
+                    <td colspan="5">Select a patient first.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<section id="doctor-portal" class="page">
+
+    <div class="card">
+        <h3>Doctor Portal</h3>
+
+        <div class="form-group">
+            <label>Select Doctor</label>
+            <select id="portalDoctor">
+                <option value="">Select Doctor</option>
+            </select>
+        </div>
+
+        <p>Select a doctor to view their appointments and patient information.</p>
+    </div>
+
+    <div class="card">
+        <h3>My Appointments</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Appointment ID</th>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="doctorAppointmentsBody">
+                <tr><td colspan="5">Select a doctor first.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>Patient Medical History</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Diagnosis</th>
+                    <th>Notes</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="doctorMedicalHistoryBody">
+                <tr><td colspan="4">Select a doctor first.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card">
+    <h3>Add Medical Record</h3>
+
+    <form id="doctorRecordForm">
+
+        <div class="form-group">
+            <label>Select Patient</label>
+            <select id="doctorRecordPatient" required>
+                <option value="">Select Patient</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Diagnosis</label>
+            <input type="text" id="doctorDiagnosis"
+                   placeholder="Enter diagnosis" required>
+        </div>
+
+        <div class="form-group">
+            <label>Notes</label>
+            <textarea id="doctorRecordNotes"
+                      placeholder="Enter medical notes"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Record Date</label>
+            <input type="date" id="doctorRecordDate" required>
+        </div>
+
+        <button type="submit">Save Medical Record</button>
+
+        <p id="doctorRecordMessage"></p>
+
+    </form>
+</div>
+
+<!-- CREATE PRESCRIPTION -->
+<div class="card">
+    <h3>Create Prescription</h3>
+
+    <form id="doctorPrescriptionForm">
+
+        <div class="form-group">
+            <label>Select Patient</label>
+            <select id="doctorPrescriptionPatient" required>
+                <option value="">Select Patient</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Prescription Date</label>
+            <input type="date" id="doctorPrescriptionDate" required>
+        </div>
+
+        <div class="form-group">
+            <label>Instructions</label>
+            <textarea id="doctorPrescriptionInstructions"
+                placeholder="Enter prescription instructions"></textarea>
+        </div>
+
+        <button type="submit">Create Prescription</button>
+
+        <p id="doctorPrescriptionMessage"></p>
+
+    </form>
+</div>
+
+<!-- ADD MEDICINE TO PRESCRIPTION -->
+<div class="card">
+    <h3>Add Medicine to Prescription</h3>
+
+    <form id="doctorPrescriptionItemForm">
+
+        <div class="form-group">
+            <label>Select Prescription</label>
+            <select id="doctorItemPrescription" required>
+                <option value="">Select Prescription</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Medicine</label>
+            <select id="doctorItemMedicine" required>
+                <option value="">Select Medicine</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Dosage</label>
+            <input type="text" id="doctorItemDosage"
+                placeholder="e.g. 500 mg" required>
+        </div>
+
+        <div class="form-group">
+            <label>Frequency</label>
+            <input type="text" id="doctorItemFrequency"
+                placeholder="e.g. Twice daily" required>
+        </div>
+
+        <div class="form-group">
+            <label>Duration (Days)</label>
+            <input type="number" id="doctorItemDuration"
+                min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="doctorItemQuantity"
+                min="1" required>
+        </div>
+
+        <button type="submit">Add Medicine</button>
+
+        <p id="doctorPrescriptionItemMessage"></p>
+
+    </form>
+</div>
+
+</section>
+
+
+    </main>
+</div>
+
+<script>
+    const API = 'http://localhost:3001';
+
+    const pageTitles = {
+        dashboard: 'Dashboard Overview',
+        doctors: 'Doctor Directory',
+        appointments: 'Appointment Management',
+        book: 'Book an Appointment',
+        ambulances: 'Ambulance Management',
+        beds: 'Beds and Wards Management',
+        patients: 'Patient Management',
+        medical: 'Medical Records & Reports',
+        pharmacy: 'Pharmacy Management',
+        prescriptions: 'Prescription Management',
+        'patient-portal': 'Patient Portal',
+        'doctor-portal': 'Doctor Portal'
+    };
+
+    let doctorsCache = [];
+
+
+// LOAD PHARMACY INVENTORY
+async function loadPharmacy() {
+    try {
+        const medicines = await getData('/api/medicines');
+
+        // Update summary cards
+        document.getElementById('totalMedicines').textContent =
+            medicines.length;
+
+        document.getElementById('lowStockMedicines').textContent =
+            medicines.filter(m => m.stock_quantity > 0 && m.stock_quantity <= 20).length;
+
+        document.getElementById('outOfStockMedicines').textContent =
+            medicines.filter(m => Number(m.stock_quantity) === 0).length;
+
+        // Display medicine inventory
+        document.getElementById('medicinesBody').innerHTML =
+            medicines.length ? medicines.map(medicine => {
+
+                const stock = Number(medicine.stock_quantity);
+
+                let status = 'Available';
+
+                if (stock === 0) {
+                    status = 'Out of Stock';
+                } else if (stock <= 20) {
+                    status = 'Low Stock';
+                }
+
+                return `
+                    <tr>
+                        <td>${medicine.medicine_id}</td>
+                        <td>${escapeHTML(medicine.medicine_name)}</td>
+                        <td>${escapeHTML(medicine.category || '-')}</td>
+                        <td>${stock}</td>
+                        <td>₹${Number(medicine.unit_price).toFixed(2)}</td>
+                        <td>${formatDate(medicine.expiry_date)}</td>
+                        <td>
+                            ${status}
+                            <br>
+                            <button class="primary-btn"
+                                onclick="updateMedicineStock(${medicine.medicine_id}, ${stock})">
+                                Update Stock
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+            }).join('') :
+            '<tr><td colspan="7">No medicines found.</td></tr>';
+
+    } catch (error) {
+        console.error('Error loading pharmacy:', error);
+
+        document.getElementById('medicinesBody').innerHTML =
+            '<tr><td colspan="7">Error loading medicines.</td></tr>';
+    }
+}
+
+
+async function updateMedicineStock(medicineId, currentStock) {
+    const newStock = prompt('Enter new stock quantity:', currentStock);
+
+    if (newStock === null) return;
+
+    if (
+        newStock.trim() === '' ||
+        !Number.isInteger(Number(newStock)) ||
+        Number(newStock) < 0
+    ) {
+        alert('Please enter a valid non-negative stock quantity.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API}/api/medicines/${medicineId}/stock`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                stock_quantity: Number(newStock)
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to update stock');
+        }
+
+        alert('Medicine stock updated successfully!');
+        await loadPharmacy();
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+
+async function loadMedicalPage() {
+    try {
+        const [patients, doctors, records, reports] = await Promise.all([
+            getData('/api/patients'),
+            getData('/api/doctors'),
+            getData('/api/medical-records'),
+            getData('/api/medical-reports')
+        ]);
+
+        // Populate patient dropdowns
+        const patientOptions = patients.map(patient =>
+            `<option value="${patient.patient_id}">
+                ${escapeHTML(patient.name)}
+            </option>`
+        ).join('');
+
+        document.getElementById('recordPatient').innerHTML =
+            '<option value="">Select Patient</option>' + patientOptions;
+
+        document.getElementById('reportPatient').innerHTML =
+            '<option value="">Select Patient</option>' + patientOptions;
+
+        // Populate doctor dropdowns
+        const doctorOptions = doctors.map(doctor =>
+            `<option value="${doctor.doctor_id}">
+                ${escapeHTML(doctor.name)}
+            </option>`
+        ).join('');
+
+        document.getElementById('recordDoctor').innerHTML =
+            '<option value="">Select Doctor</option>' + doctorOptions;
+
+        document.getElementById('reportDoctor').innerHTML =
+            '<option value="">Select Doctor</option>' + doctorOptions;
+
+        // Display medical records
+        document.getElementById('medicalRecordsBody').innerHTML =
+            records.length ? records.map(record => `
+                <tr>
+                    <td>${record.record_id}</td>
+                    <td>${escapeHTML(record.patient_name)}</td>
+                    <td>${escapeHTML(record.doctor_name)}</td>
+                    <td>${escapeHTML(record.diagnosis)}</td>
+                    <td>${escapeHTML(record.notes || '-')}</td>
+                    <td>${formatDate(record.record_date)}</td>
+                </tr>
+            `).join('') :
+            '<tr><td colspan="6">No medical records found.</td></tr>';
+
+        // Display medical reports
+        document.getElementById('medicalReportsBody').innerHTML =
+            reports.length ? reports.map(report => `
+                <tr>
+                    <td>${report.report_id}</td>
+                    <td>${escapeHTML(report.patient_name)}</td>
+                    <td>${escapeHTML(report.doctor_name || '-')}</td>
+                    <td>${escapeHTML(report.report_type)}</td>
+                    <td>${escapeHTML(report.report_details || '-')}</td>
+                    <td>${formatDate(report.report_date)}</td>
+                </tr>
+            `).join('') :
+            '<tr><td colspan="6">No medical reports found.</td></tr>';
+
+    } catch (error) {
+        console.error('Error loading medical data:', error);
+        document.getElementById('medicalRecordsBody').innerHTML =
+            '<tr><td colspan="6">Error loading medical records.</td></tr>';
+        document.getElementById('medicalReportsBody').innerHTML =
+            '<tr><td colspan="6">Error loading medical reports.</td></tr>';
+    }
+}
+
+
+    // Navigate between pages
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.toggle('active', page.id === pageId);
+        });
+
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.classList.toggle(
+                'active',
+                button.dataset.page === pageId
+            );
+        });
+
+        document.getElementById('page-title').textContent =
+            pageTitles[pageId] || 'Hospital Management';
+
+        if (pageId === 'doctors') loadDoctors();
+        if (pageId === 'appointments') loadAppointments();
+        if (pageId === 'book') loadDoctorOptions();
+        if (pageId === 'ambulances') loadAmbulances();
+        if (pageId === 'beds') loadBeds();
+        if (pageId === 'patients') loadPatients();
+        if (pageId === 'medical') loadMedicalPage();
+        if (pageId === 'pharmacy') loadPharmacy();
+        if (pageId === 'prescriptions') loadPrescriptions();
+        if (pageId === 'patient-portal') loadPatientPortal();
+        if (pageId === 'doctor-portal') loadDoctorPortal();
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            showPage(button.dataset.page);
+        });
+    });
+
+    document.querySelectorAll('[data-go]').forEach(button => {
+        button.addEventListener('click', () => {
+            showPage(button.dataset.go);
+        });
+    });
+
+    // Fetch JSON safely from the backend
+    async function getData(path) {
+        const response = await fetch(API + path);
+
+        if (!response.ok) {
+            throw new Error('Request failed: ' + response.status);
+        }
+
+        return response.json();
+    }
+
+    function showError(tableId, columns, message) {
+        document.getElementById(tableId).innerHTML =
+            `<tr><td colspan="${columns}" class="empty">${
+                escapeHTML(message)
+            }</td></tr>`;
+    }
+
+    // Prevent database text from being interpreted as HTML
+    function escapeHTML(value) {
+        return String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[char]);
+    }
+
+    function formatDate(value) {
+        if (!value) return '—';
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return escapeHTML(value);
+
+        return date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            timeZone: 'UTC'
+        });
+    }
+
+    function formatTime(value) {
+        if (!value) return '—';
+
+        const parts = String(value).split(':');
+        if (parts.length < 2) return escapeHTML(value);
+
+        let hour = Number(parts[0]);
+        const minute = parts[1];
+        const suffix = hour >= 12 ? 'PM' : 'AM';
+
+        hour = hour % 12 || 12;
+
+        return `${hour}:${minute} ${suffix}`;
+    }
+
+    // Load doctor data
+    async function loadDoctors() {
+        const table = document.getElementById('doctors-table');
+
+        table.innerHTML = `
+            <tr><td colspan="5" class="empty">Loading doctors...</td></tr>
+        `;
+
+        try {
+            doctorsCache = await getData('/api/doctors');
+
+            document.getElementById('doctor-count').textContent =
+                doctorsCache.length;
+
+            if (!doctorsCache.length) {
+                showError('doctors-table', 5, 'No doctors found.');
+                return;
+            }
+
+            table.innerHTML = doctorsCache.map(doctor => `
+                <tr>
+                    <td>${escapeHTML(doctor.doctor_id)}</td>
+                    <td><strong>${escapeHTML(doctor.name)}</strong></td>
+                    <td>${escapeHTML(doctor.specialization)}</td>
+                    <td>${escapeHTML(doctor.experience)} years</td>
+                    <td>${escapeHTML(doctor.department_name || '—')}</td>
+                </tr>
+            `).join('');
+
+        } catch (error) {
+            showError('doctors-table', 5,
+                'Could not load doctors. Check that the backend is running.');
+        }
+    }
+
+    // Load appointments
+    async function loadAppointments() {
+        const table = document.getElementById('appointments-table');
+
+        table.innerHTML = `
+            <tr><td colspan="6" class="empty">Loading appointments...</td></tr>
+        `;
+
+        try {
+            const appointments = await getData('/api/appointments');
+
+            document.getElementById('appointment-count').textContent =
+                appointments.length;
+
+            const rows = appointments.map(appointment => `
+                <tr>
+                    <td>${escapeHTML(appointment.appointment_id)}</td>
+                    <td>${escapeHTML(appointment.patient_name)}</td>
+                    <td>${escapeHTML(appointment.doctor_name)}</td>
+                    <td>${formatDate(appointment.appointment_date)}</td>
+                    <td>${formatTime(appointment.appointment_time)}</td>
+                    <td><span class="pill">${
+                        escapeHTML(appointment.status)
+                    }</span></td>
+                </tr>
+            `).join('');
+
+            table.innerHTML = rows || `
+                <tr><td colspan="6" class="empty">No appointments yet.</td></tr>
+            `;
+
+            const dashboardTable =
+                document.getElementById('dashboard-appointments');
+
+            dashboardTable.innerHTML = appointments.slice(0, 5).map(item => `
+                <tr>
+                    <td>${escapeHTML(item.appointment_id)}</td>
+                    <td>${escapeHTML(item.patient_name)}</td>
+                    <td>${escapeHTML(item.doctor_name)}</td>
+                    <td>${formatDate(item.appointment_date)}</td>
+                    <td><span class="pill">${escapeHTML(item.status)}</span></td>
+                </tr>
+            `).join('') || `
+                <tr><td colspan="5" class="empty">No appointments yet.</td></tr>
+            `;
+
+        } catch (error) {
+            showError('appointments-table', 6,
+                'Could not load appointments. Check your backend.');
+
+            showError('dashboard-appointments', 5,
+                'Could not load appointments.');
+        }
+    }
+
+    // Check backend connection
+    async function checkBackend() {
+        const status = document.getElementById('backend-status');
+
+        try {
+            await getData('/api/test-db');
+            status.textContent = 'Connected';
+            status.style.color = '#138a7e';
+        } catch (error) {
+            status.textContent = 'Offline';
+            status.style.color = '#c0392b';
+        }
+    }
+
+    // Populate the doctor dropdown
+    async function loadDoctorOptions() {
+        const select = document.getElementById('doctor-select');
+
+        try {
+            doctorsCache = await getData('/api/doctors');
+
+            select.innerHTML = `
+                <option value="">Select a doctor</option>
+                ${doctorsCache.map(doctor => `
+                    <option value="${escapeHTML(doctor.doctor_id)}">
+                        ${escapeHTML(doctor.name)} — ${
+                            escapeHTML(doctor.specialization)
+                        }
+                    </option>
+                `).join('')}
+            `;
+
+        } catch (error) {
+            select.innerHTML =
+                '<option value="">Could not load doctors</option>';
+        }
+    }
+
+    // Load available slots when a doctor is selected
+    document.getElementById('doctor-select').addEventListener(
+        'change',
+        async function () {
+            const slotSelect = document.getElementById('slot-select');
+            const doctorId = this.value;
+
+            slotSelect.disabled = true;
+            slotSelect.innerHTML =
+                '<option value="">Loading available slots...</option>';
+
+            if (!doctorId) {
+                slotSelect.innerHTML =
+                    '<option value="">Choose a doctor first</option>';
+                return;
+            }
+
+            try {
+                const slots = await getData(
+                    '/api/slots?doctor_id=' + encodeURIComponent(doctorId)
+                );
+
+                if (!slots.length) {
+                    slotSelect.innerHTML =
+                        '<option value="">No available slots</option>';
+                    return;
+                }
+
+                slotSelect.innerHTML = `
+                    <option value="">Select a slot</option>
+                    ${slots.map(slot => `
+                        <option value="${escapeHTML(slot.slot_id)}">
+                            ${formatDate(slot.slot_date)} at ${
+                                formatTime(slot.start_time)
+                            }
+                        </option>
+                    `).join('')}
+                `;
+
+                slotSelect.disabled = false;
+
+            } catch (error) {
+                slotSelect.innerHTML =
+                    '<option value="">Could not load slots</option>';
+            }
+        }
+    );
+
+    // Book an appointment using the backend API
+    document.getElementById('booking-form').addEventListener(
+        'submit',
+        async function (event) {
+            event.preventDefault();
+
+            const message = document.getElementById('booking-message');
+            const patientId = Number(
+                document.getElementById('patient-id').value
+            );
+            const slotId = Number(
+                document.getElementById('slot-select').value
+            );
+
+            if (!Number.isInteger(patientId) || patientId < 1 || !slotId) {
+                message.style.color = '#c0392b';
+                message.textContent =
+                    'Enter a valid patient ID and select an available slot.';
+                return;
+            }
+
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Booking...';
+
+            try {
+                const response = await fetch(API + '/api/appointments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patient_id: patientId,
+                        slot_id: slotId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Booking failed');
+                }
+
+                message.style.color = '#138a7e';
+                message.textContent =
+                    'Appointment booked successfully! Appointment ID: ' +
+                    result.appointment_id;
+
+                this.reset();
+
+                document.getElementById('slot-select').innerHTML =
+                    '<option value="">Choose a doctor first</option>';
+                document.getElementById('slot-select').disabled = true;
+
+                await loadAppointments();
+
+            } catch (error) {
+                message.style.color = '#c0392b';
+                message.textContent = error.message;
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Confirm Appointment';
+            }
+        }
+    );
+
+    // Refresh buttons
+    document.getElementById('refresh-doctors').addEventListener(
+        'click', loadDoctors
+    );
+
+    document.getElementById('refresh-appointments').addEventListener(
+        'click', loadAppointments
+    );
+
+    
+async function loadAmbulances() {
+    const table = document.getElementById('ambulances-table');
+    const message = document.getElementById('ambulance-message');
+
+    table.innerHTML = `
+        <tr><td colspan="5" class="empty">Loading ambulances...</td></tr>
+    `;
+    message.textContent = '';
+
+    try {
+        const ambulances = await getData('/api/ambulances');
+
+        if (!ambulances.length) {
+            table.innerHTML = `
+                <tr><td colspan="5" class="empty">No ambulances found.</td></tr>
+            `;
+            return;
+        }
+
+        table.innerHTML = ambulances.map(ambulance => `
+            <tr>
+                <td>${escapeHTML(ambulance.ambulance_id)}</td>
+                <td><strong>${escapeHTML(ambulance.vehicle_number)}</strong></td>
+                <td>${escapeHTML(ambulance.driver_name)}</td>
+                <td>${escapeHTML(ambulance.phone || '—')}</td>
+                <td>
+                    <select
+                        class="ambulance-status"
+                        data-id="${escapeHTML(ambulance.ambulance_id)}"
+                    >
+                        <option value="Available"
+                            ${ambulance.status === 'Available' ? 'selected' : ''}>
+                            Available
+                        </option>
+                        <option value="On Trip"
+                            ${ambulance.status === 'On Trip' ? 'selected' : ''}>
+                            On Trip
+                        </option>
+                        <option value="Maintenance"
+                            ${ambulance.status === 'Maintenance' ? 'selected' : ''}>
+                            Maintenance
+                        </option>
+                    </select>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        showError(
+            'ambulances-table',
+            5,
+            'Could not load ambulances. Check that the backend is running.'
+        );
+    }
+}
+
+document.getElementById('ambulances-table').addEventListener(
+    'change',
+    async function (event) {
+        if (!event.target.matches('.ambulance-status')) return;
+
+        const select = event.target;
+        const ambulanceId = select.dataset.id;
+        const newStatus = select.value;
+        const message = document.getElementById('ambulance-message');
+
+        select.disabled = true;
+        message.textContent = 'Updating status...';
+        message.style.color = '#758397';
+
+        try {
+            const response = await fetch(
+                `${API}/api/ambulances/${ambulanceId}/status`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Update failed');
+            }
+
+            message.style.color = '#138a7e';
+            message.textContent = 'Ambulance status updated successfully!';
+
+        } catch (error) {
+            message.style.color = '#c0392b';
+            message.textContent = error.message;
+            await loadAmbulances();
+        } finally {
+            select.disabled = false;
+        }
+    }
+);
+
+document.getElementById('refresh-ambulances').addEventListener(
+    'click',
+    loadAmbulances
+);
+
+
+async function loadBeds() {
+    const table = document.getElementById('beds-table');
+    const message = document.getElementById('beds-message');
+
+    table.innerHTML = `
+        <tr><td colspan="6" class="empty">Loading beds...</td></tr>
+    `;
+    message.textContent = '';
+
+    try {
+        const beds = await getData('/api/beds');
+
+        document.getElementById('total-beds').textContent = beds.length;
+        document.getElementById('available-beds').textContent =
+            beds.filter(b => b.status === 'Available').length;
+        document.getElementById('occupied-beds').textContent =
+            beds.filter(b => b.status === 'Occupied').length;
+
+        if (!beds.length) {
+            table.innerHTML = `
+                <tr><td colspan="6" class="empty">No beds found.</td></tr>
+            `;
+            return;
+        }
+
+        table.innerHTML = beds.map(bed => `
+            <tr>
+                <td><strong>${escapeHTML(bed.bed_number)}</strong></td>
+                <td>${escapeHTML(bed.ward_name)}</td>
+                <td>${escapeHTML(bed.ward_type)}</td>
+                <td>${escapeHTML(bed.location || '—')}</td>
+                <td>${bed.is_movable ? 'Yes' : 'No'}</td>
+                <td>
+                    <select class="bed-status"
+                            data-id="${escapeHTML(bed.bed_id)}">
+                        <option value="Available"
+                            ${bed.status === 'Available' ? 'selected' : ''}>
+                            Available
+                        </option>
+                        <option value="Occupied"
+                            ${bed.status === 'Occupied' ? 'selected' : ''}>
+                            Occupied
+                        </option>
+                        <option value="Maintenance"
+                            ${bed.status === 'Maintenance' ? 'selected' : ''}>
+                            Maintenance
+                        </option>
+                    </select>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        showError('beds-table', 6,
+            'Could not load beds. Check that the backend is running.');
+    }
+}
+
+document.getElementById('beds-table').addEventListener(
+    'change',
+    async function (event) {
+        if (!event.target.matches('.bed-status')) return;
+
+        const select = event.target;
+        const bedId = select.dataset.id;
+        const newStatus = select.value;
+        const message = document.getElementById('beds-message');
+
+        select.disabled = true;
+        message.style.color = '#758397';
+        message.textContent = 'Updating bed status...';
+
+        try {
+            const response = await fetch(
+                `${API}/api/beds/${bedId}/status`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Update failed');
+            }
+
+            message.style.color = '#138a7e';
+            message.textContent = 'Bed status updated successfully!';
+
+            // Refresh counts and show the saved status
+            await loadBeds();
+
+            document.getElementById('beds-message').style.color = '#138a7e';
+            document.getElementById('beds-message').textContent =
+                'Bed status updated successfully!';
+
+        } catch (error) {
+            message.style.color = '#c0392b';
+            message.textContent = error.message;
+            await loadBeds();
+        }
+    }
+);
+
+document.getElementById('refresh-beds').addEventListener(
+    'click',
+    loadBeds
+);
+
+
+async function loadPatients() {
+    const table = document.getElementById('patients-table');
+
+    table.innerHTML = `
+        <tr><td colspan="6" class="empty">Loading patients...</td></tr>
+    `;
+
+    try {
+        const patients = await getData('/api/patients');
+
+        if (patients.length === 0) {
+            table.innerHTML = `
+                <tr><td colspan="6" class="empty">No patients registered yet.</td></tr>
+            `;
+            return;
+        }
+
+        table.innerHTML = patients.map(patient => `
+            <tr>
+                <td>${escapeHTML(patient.patient_id)}</td>
+                <td><strong>${escapeHTML(patient.name)}</strong></td>
+                <td>${escapeHTML(patient.age ?? '—')}</td>
+                <td>${escapeHTML(patient.sex || '—')}</td>
+                <td>${escapeHTML(patient.email || '—')}</td>
+                <td>${escapeHTML(patient.phone || '—')}</td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        showError(
+            'patients-table',
+            6,
+            'Could not load patients. Check that the backend is running.'
+        );
+    }
+}
+
+document.getElementById('patient-form').addEventListener(
+    'submit',
+    async function (event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const message = document.getElementById('patient-form-message');
+        const submitButton = form.querySelector('[type="submit"]');
+
+        const formData = new FormData(form);
+
+        const patient = {
+            name: formData.get('name').trim(),
+            age: formData.get('age'),
+            sex: formData.get('sex'),
+            email: formData.get('email').trim(),
+            phone: formData.get('phone').trim()
+        };
+
+        submitButton.disabled = true;
+        message.style.color = '#758397';
+        message.textContent = 'Adding patient...';
+
+        try {
+            const response = await fetch(`${API}/api/patients`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(patient)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Could not add patient');
+            }
+
+            form.reset();
+            await loadPatients();
+
+            message.style.color = '#138a7e';
+            message.textContent =
+                `Patient added successfully! Patient ID: ${result.patient_id}`;
+
+        } catch (error) {
+            message.style.color = '#c0392b';
+            message.textContent = error.message;
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+);
+
+document.getElementById('refresh-patients').addEventListener(
+    'click',
+    loadPatients
+);
+
+
+// ADD MEDICAL RECORD
+document.getElementById('medicalRecordForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = {
+        patient_id: document.getElementById('recordPatient').value,
+        doctor_id: document.getElementById('recordDoctor').value,
+        appointment_id: document.getElementById('recordAppointment').value || null,
+        diagnosis: document.getElementById('recordDiagnosis').value,
+        notes: document.getElementById('recordNotes').value,
+        record_date: document.getElementById('recordDate').value
+    };
+
+    const message = document.getElementById('recordMessage');
+
+    try {
+        const response = await fetch(`${API}/api/medical-records`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to add medical record');
+        }
+
+        message.textContent = 'Medical record added successfully!';
+        message.style.color = 'green';
+
+        this.reset();
+        loadMedicalPage();
+
+    } catch (error) {
+        message.textContent = error.message;
+        message.style.color = 'red';
+    }
+});
+
+
+// ADD MEDICAL REPORT
+document.getElementById('medicalReportForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = {
+        patient_id: document.getElementById('reportPatient').value,
+        doctor_id: document.getElementById('reportDoctor').value || null,
+        appointment_id: document.getElementById('reportAppointment').value || null,
+        report_type: document.getElementById('reportType').value,
+        report_details: document.getElementById('reportDetails').value,
+        report_date: document.getElementById('reportDate').value
+    };
+
+    const message = document.getElementById('reportMessage');
+
+    try {
+        const response = await fetch(`${API}/api/medical-reports`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to add medical report');
+        }
+
+        message.textContent = 'Medical report added successfully!';
+        message.style.color = 'green';
+
+        this.reset();
+        loadMedicalPage();
+
+    } catch (error) {
+        message.textContent = error.message;
+        message.style.color = 'red';
+    }
+});
+
+
+// ADD NEW MEDICINE
+document.getElementById('medicineForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = {
+        medicine_name: document.getElementById('medicineName').value.trim(),
+        category: document.getElementById('medicineCategory').value.trim(),
+        stock_quantity: document.getElementById('medicineStock').value,
+        unit_price: document.getElementById('medicinePrice').value,
+        expiry_date: document.getElementById('medicineExpiry').value || null
+    };
+
+    const message = document.getElementById('medicineMessage');
+
+    try {
+        const response = await fetch(`${API}/api/medicines`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to add medicine');
+        }
+
+        message.textContent = 'Medicine added successfully!';
+        message.style.color = 'green';
+
+        this.reset();
+
+        await loadPharmacy();
+
+    } catch (error) {
+        message.textContent = error.message;
+        message.style.color = 'red';
+    }
+});
+
+
+// LOAD PRESCRIPTION PAGE
+
+async function loadPrescriptions() {
+    try {
+        // Fetch all required data
+        const patients = await getData('/api/patients');
+        const doctors = await getData('/api/doctors');
+        const prescriptions = await getData('/api/prescriptions');
+        const medicines = await getData('/api/medicines');
+        const prescriptionItems = await getData('/api/prescription-items');
+
+        // Populate patient dropdown
+        document.getElementById('prescriptionPatient').innerHTML =
+            '<option value="">Select Patient</option>' +
+            patients.map(patient => `
+                <option value="${patient.patient_id}">
+                    ${escapeHTML(patient.name)}
+                </option>
+            `).join('');
+
+        // Populate doctor dropdown
+        document.getElementById('prescriptionDoctor').innerHTML =
+            '<option value="">Select Doctor</option>' +
+            doctors.map(doctor => `
+                <option value="${doctor.doctor_id}">
+                    ${escapeHTML(doctor.name)}
+                </option>
+            `).join('');
+
+        // Display existing prescriptions
+        document.getElementById('prescriptionsBody').innerHTML =
+            prescriptions.length ?
+            prescriptions.map(p => `
+                <tr>
+                    <td>${p.prescription_id}</td>
+                    <td>${escapeHTML(p.patient_name)}</td>
+                    <td>${escapeHTML(p.doctor_name)}</td>
+                    <td>${p.appointment_id || '-'}</td>
+                    <td>${escapeHTML(p.instructions || '-')}</td>
+                    <td>${formatDate(p.prescribed_at)}</td>
+                </tr>
+            `).join('') :
+            '<tr><td colspan="6">No prescriptions found.</td></tr>';
+
+        // Populate prescription dropdown for adding medicines
+        document.getElementById('itemPrescription').innerHTML =
+            '<option value="">Select Prescription</option>' +
+            prescriptions.map(p => `
+                <option value="${p.prescription_id}">
+                    #${p.prescription_id} - ${escapeHTML(p.patient_name)}
+                    - ${escapeHTML(p.doctor_name)}
+                </option>
+            `).join('');
+
+        // Populate medicine dropdown with stock information
+        document.getElementById('itemMedicine').innerHTML =
+            '<option value="">Select Medicine</option>' +
+            medicines.map(m => `
+                <option value="${m.medicine_id}"
+                    ${Number(m.stock_quantity) <= 0 ? 'disabled' : ''}>
+                    ${escapeHTML(m.medicine_name)}
+                    (Stock: ${m.stock_quantity})
+                </option>
+            `).join('');
+
+        // Display prescribed medicines
+        document.getElementById('prescriptionItemsBody').innerHTML =
+            prescriptionItems.length ?
+            prescriptionItems.map(item => `
+                <tr>
+                    <td>${item.prescription_id}</td>
+                    <td>${escapeHTML(item.medicine_name)}</td>
+                    <td>${escapeHTML(item.dosage || '-')}</td>
+                    <td>${escapeHTML(item.frequency || '-')}</td>
+                    <td>${item.duration_days || '-'} days</td>
+                    <td>${item.quantity}</td>
+                </tr>
+            `).join('') :
+            '<tr><td colspan="6">No prescribed medicines found.</td></tr>';
+
+    } catch (error) {
+        console.error('Error loading prescriptions:', error);
+
+        document.getElementById('prescriptionsBody').innerHTML =
+            '<tr><td colspan="6">Error loading prescriptions.</td></tr>';
+
+        document.getElementById('prescriptionItemsBody').innerHTML =
+            '<tr><td colspan="6">Error loading prescribed medicines.</td></tr>';
+    }
+}
+
+
+
+// CREATE NEW PRESCRIPTION
+document.getElementById('prescriptionForm')
+    .addEventListener('submit', async function(event) {
+
+        event.preventDefault();
+
+        const patient_id =
+            document.getElementById('prescriptionPatient').value;
+
+        const doctor_id =
+            document.getElementById('prescriptionDoctor').value;
+
+        const appointment_id =
+            document.getElementById('prescriptionAppointment').value;
+
+        const prescribed_at =
+            document.getElementById('prescriptionDate').value;
+
+        const instructions =
+            document.getElementById('prescriptionInstructions').value;
+
+        try {
+            const response = await fetch(`${API}/api/prescriptions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    patient_id,
+                    doctor_id,
+                    appointment_id: appointment_id || null,
+                    prescribed_at,
+                    instructions
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to create prescription');
+            }
+
+            document.getElementById('prescriptionMessage').textContent =
+                'Prescription created successfully!';
+
+            document.getElementById('prescriptionForm').reset();
+
+            await loadPrescriptions();
+
+        } catch (error) {
+            document.getElementById('prescriptionMessage').textContent =
+                error.message;
+        }
+    });
+
+
+// ADD MEDICINE TO PRESCRIPTION
+
+// ADD MEDICINE TO PRESCRIPTION
+document.getElementById('prescriptionItemForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const message = document.getElementById('prescriptionItemMessage');
+
+    const data = {
+        prescription_id: Number(document.getElementById('itemPrescription').value),
+        medicine_id: Number(document.getElementById('itemMedicine').value),
+        dosage: document.getElementById('itemDosage').value.trim(),
+        frequency: document.getElementById('itemFrequency').value.trim(),
+        duration_days: Number(document.getElementById('itemDuration').value),
+        quantity: Number(document.getElementById('itemQuantity').value)
+    };
+
+    try {
+        const response = await fetch(`${API}/api/prescription-items`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to add medicine');
+        }
+
+        message.style.color = 'green';
+        message.textContent = result.message;
+
+        document.getElementById('prescriptionItemForm').reset();
+
+        await loadPrescriptions();
+
+    } catch (error) {
+        console.error('Error adding medicine:', error);
+
+        message.style.color = 'red';
+        message.textContent = error.message;
+    }
+});
+
+
+// PATIENT PORTAL
+async function loadPatientPortal() {
+    try {
+        // Fetch existing database information
+        const patients = await getData('/api/patients');
+        const appointments = await getData('/api/appointments');
+        const prescriptions = await getData('/api/prescriptions');
+        const records = await getData('/api/medical-records');
+        const reports = await getData('/api/medical-reports');
+
+        const patientSelect = document.getElementById('portalPatient');
+
+        // Populate patient dropdown
+        const previousSelection = patientSelect.value;
+
+        patientSelect.innerHTML =
+            '<option value="">Select Patient</option>' +
+            patients.map(patient => `
+                <option value="${patient.patient_id}">
+                    ${escapeHTML(patient.name)}
+                </option>
+            `).join('');
+
+        // Display information for selected patient
+        function displayPatientData(patientId) {
+
+            const patientAppointments = appointments.filter(
+                a => String(a.patient_id) === String(patientId)
+            );
+
+            const patientPrescriptions = prescriptions.filter(
+                p => String(p.patient_id) === String(patientId)
+            );
+
+            const patientRecords = records.filter(
+                r => String(r.patient_id) === String(patientId)
+            );
+
+            const patientReports = reports.filter(
+                r => String(r.patient_id) === String(patientId)
+            );
+
+            // Appointments
+            document.getElementById('portalAppointmentsBody').innerHTML =
+                patientAppointments.length ?
+                patientAppointments.map(a => `
+                    <tr>
+                        <td>${a.appointment_id}</td>
+                        <td>${escapeHTML(a.doctor_name)}</td>
+                        <td>${formatDate(a.appointment_date)}
+                            ${formatTime(a.appointment_time)}</td>
+                        <td>${escapeHTML(a.status)}</td>
+                    </tr>
+                `).join('') :
+                '<tr><td colspan="4">No appointments found.</td></tr>';
+
+            // Prescriptions
+            document.getElementById('portalPrescriptionsBody').innerHTML =
+                patientPrescriptions.length ?
+                patientPrescriptions.map(p => `
+                    <tr>
+                        <td>${p.prescription_id}</td>
+                        <td>${escapeHTML(p.doctor_name)}</td>
+                        <td>${formatDate(p.prescribed_at)}</td>
+                        <td>${escapeHTML(p.instructions || '-')}</td>
+                    </tr>
+                `).join('') :
+                '<tr><td colspan="4">No prescriptions found.</td></tr>';
+
+            // Medical Records
+            document.getElementById('portalMedicalRecordsBody').innerHTML =
+                patientRecords.length ?
+                patientRecords.map(r => `
+                    <tr>
+                        <td>${r.record_id}</td>
+                        <td>${escapeHTML(r.doctor_name)}</td>
+                        <td>
+                            <strong>Diagnosis:</strong>
+                            ${escapeHTML(r.diagnosis || '-')}
+                            <br>
+                            <strong>Notes:</strong>
+                            ${escapeHTML(r.notes || '-')}
+                        </td>
+                        <td>${formatDate(r.record_date)}</td>
+                    </tr>
+                `).join('') :
+                '<tr><td colspan="4">No medical records found.</td></tr>';
+
+            // Medical Reports
+            document.getElementById('portalMedicalReportsBody').innerHTML =
+                patientReports.length ?
+                patientReports.map(r => `
+                    <tr>
+                        <td>${r.report_id}</td>
+                        <td>${escapeHTML(r.report_type)}</td>
+                        <td>${escapeHTML(r.doctor_name || '-')}</td>
+                        <td>${formatDate(r.report_date)}</td>
+                        <td>${escapeHTML(r.report_details || '-')}</td>
+                    </tr>
+                `).join('') :
+                '<tr><td colspan="5">No medical reports found.</td></tr>';
+        }
+
+        // Update information whenever patient changes
+        patientSelect.onchange = function() {
+            displayPatientData(this.value);
+        };
+
+        // Restore previous selection if available
+        if (previousSelection &&
+            patients.some(p => String(p.patient_id) === String(previousSelection))) {
+            patientSelect.value = previousSelection;
+            displayPatientData(previousSelection);
+        } else {
+            patientSelect.value = '';
+
+            document.getElementById('portalAppointmentsBody').innerHTML =
+                '<tr><td colspan="4">Select a patient first.</td></tr>';
+
+            document.getElementById('portalPrescriptionsBody').innerHTML =
+                '<tr><td colspan="4">Select a patient first.</td></tr>';
+
+            document.getElementById('portalMedicalRecordsBody').innerHTML =
+                '<tr><td colspan="4">Select a patient first.</td></tr>';
+
+            document.getElementById('portalMedicalReportsBody').innerHTML =
+                '<tr><td colspan="5">Select a patient first.</td></tr>';
+        }
+
+    } catch (error) {
+        console.error('Error loading Patient Portal:', error);
+        alert('Unable to load Patient Portal data. Please check the backend.');
+    }
+}
+
+async function loadDoctorPortal() {
+    try {
+        const doctors = await getData('/api/doctors');
+
+        const doctorSelect = document.getElementById('portalDoctor');
+
+        doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+
+        doctors.forEach(doctor => {
+            doctorSelect.innerHTML += `
+                <option value="${doctor.doctor_id}">
+                    ${escapeHTML(doctor.name)}
+                </option>
+            `;
+        });
+
+        const patients = await getData('/api/patients');
+
+const patientSelect = document.getElementById('doctorRecordPatient');
+
+patientSelect.innerHTML = '<option value="">Select Patient</option>';
+
+patients.forEach(patient => {
+    patientSelect.innerHTML += `
+        <option value="${patient.patient_id}">
+            ${escapeHTML(patient.name)}
+        </option>
+    `;
+});
+
+const prescriptionPatientSelect =
+    document.getElementById('doctorPrescriptionPatient');
+
+prescriptionPatientSelect.innerHTML =
+    '<option value="">Select Patient</option>';
+
+patients.forEach(patient => {
+    prescriptionPatientSelect.innerHTML += `
+        <option value="${patient.patient_id}">
+            ${escapeHTML(patient.name)}
+        </option>
+    `;
+});
+
+// Load existing prescriptions
+const prescriptions = await getData('/api/prescriptions');
+
+const prescriptionSelect =
+    document.getElementById('doctorItemPrescription');
+
+prescriptionSelect.innerHTML =
+    '<option value="">Select Prescription</option>';
+
+prescriptions.forEach(prescription => {
+    prescriptionSelect.innerHTML += `
+        <option value="${prescription.prescription_id}">
+            Prescription #${prescription.prescription_id} -
+            ${escapeHTML(prescription.patient_name)}
+        </option>
+    `;
+});
+
+// Load medicines from pharmacy
+const medicines = await getData('/api/medicines');
+
+const medicineSelect =
+    document.getElementById('doctorItemMedicine');
+
+medicineSelect.innerHTML =
+    '<option value="">Select Medicine</option>';
+
+medicines.forEach(medicine => {
+    if (Number(medicine.stock_quantity) > 0) {
+        medicineSelect.innerHTML += `
+            <option value="${medicine.medicine_id}">
+                ${escapeHTML(medicine.medicine_name)}
+                (Stock: ${medicine.stock_quantity})
+            </option>
+        `;
+    }
+});
+
+
+    } catch (error) {
+        console.error('Error loading Doctor Portal:', error);
+    }
+}
+
+
+document.getElementById('portalDoctor').addEventListener('change', async function () {
+    const doctorId = this.value;
+
+    const appointmentsBody = document.getElementById('doctorAppointmentsBody');
+    const historyBody = document.getElementById('doctorMedicalHistoryBody');
+
+    if (!doctorId) {
+        appointmentsBody.innerHTML =
+            '<tr><td colspan="5">Select a doctor first.</td></tr>';
+
+        historyBody.innerHTML =
+            '<tr><td colspan="4">Select a doctor first.</td></tr>';
+
+        return;
+    }
+
+    try {
+        // Load doctor's appointments
+        const appointments = await getData(`/api/appointments/doctor/${doctorId}`);
+
+        if (appointments.length === 0) {
+            appointmentsBody.innerHTML =
+                '<tr><td colspan="5">No appointments found.</td></tr>';
+        } else {
+            appointmentsBody.innerHTML = appointments.map(a => `
+                <tr>
+                    <td>${a.appointment_id}</td>
+                    <td>${escapeHTML(a.patient_name)}</td>
+                    <td>${formatDate(a.appointment_date)}</td>
+                    <td>${formatTime(a.appointment_time)}</td>
+                    <td>${escapeHTML(a.status)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Load doctor's medical records
+        const records = await getData('/api/medical-records');
+
+        const doctorRecords = records.filter(
+            record => String(record.doctor_id) === String(doctorId)
+        );
+
+        if (doctorRecords.length === 0) {
+            historyBody.innerHTML =
+                '<tr><td colspan="4">No medical history found.</td></tr>';
+        } else {
+            historyBody.innerHTML = doctorRecords.map(record => `
+                <tr>
+                    <td>${escapeHTML(record.patient_name)}</td>
+                    <td>${escapeHTML(record.diagnosis || '')}</td>
+                    <td>${escapeHTML(record.notes || '')}</td>
+                    <td>${formatDate(record.record_date)}</td>
+                </tr>
+            `).join('');
+        }
+
+    } catch (error) {
+        console.error('Error loading Doctor Portal:', error);
+    }
+});
+
+
+document.getElementById('doctorRecordForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const doctorId = document.getElementById('portalDoctor').value;
+    const patientId = document.getElementById('doctorRecordPatient').value;
+    const diagnosis = document.getElementById('doctorDiagnosis').value;
+    const notes = document.getElementById('doctorRecordNotes').value;
+    const recordDate = document.getElementById('doctorRecordDate').value;
+
+    const message = document.getElementById('doctorRecordMessage');
+
+    if (!doctorId) {
+        message.textContent = 'Please select a doctor first.';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API}/api/medical-records`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                patient_id: patientId,
+                doctor_id: doctorId,
+                diagnosis: diagnosis,
+                notes: notes,
+                record_date: recordDate
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Could not save medical record.');
+        }
+
+        message.textContent = 'Medical record saved successfully!';
+
+        this.reset();
+
+        // Refresh the Doctor Portal
+        document.getElementById('portalDoctor').dispatchEvent(
+            new Event('change')
+        );
+
+    } catch (error) {
+        console.error(error);
+        message.textContent = error.message;
+    }
+});
+
+
+document.getElementById('doctorPrescriptionForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const doctorId = document.getElementById('portalDoctor').value;
+    const patientId = document.getElementById('doctorPrescriptionPatient').value;
+    const prescribedAt = document.getElementById('doctorPrescriptionDate').value;
+    const instructions = document.getElementById('doctorPrescriptionInstructions').value;
+
+    const message = document.getElementById('doctorPrescriptionMessage');
+
+    if (!doctorId) {
+        message.textContent = 'Please select a doctor first.';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API}/api/prescriptions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                patient_id: patientId,
+                doctor_id: doctorId,
+                appointment_id: null,
+                instructions: instructions,
+                prescribed_at: prescribedAt
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Could not create prescription.');
+        }
+
+        message.textContent = 'Prescription created successfully!';
+
+        this.reset();
+
+    } catch (error) {
+        console.error('Error creating prescription:', error);
+        message.textContent = error.message;
+    }
+});
+
+
+document.getElementById('doctorPrescriptionItemForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const prescriptionId = document.getElementById('doctorItemPrescription').value;
+    const medicineId = document.getElementById('doctorItemMedicine').value;
+    const dosage = document.getElementById('doctorItemDosage').value;
+    const frequency = document.getElementById('doctorItemFrequency').value;
+    const duration = document.getElementById('doctorItemDuration').value;
+    const quantity = document.getElementById('doctorItemQuantity').value;
+
+    const message = document.getElementById('doctorPrescriptionItemMessage');
+
+    try {
+        const response = await fetch(`${API}/api/prescription-items`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                prescription_id: prescriptionId,
+                medicine_id: medicineId,
+                dosage: dosage,
+                frequency: frequency,
+                duration_days: duration,
+                quantity: quantity
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Could not add medicine.');
+        }
+
+        message.textContent = 'Medicine added successfully! Remaining stock: ' +
+            result.remaining_stock;
+
+        this.reset();
+
+        // Refresh medicine stock and dropdowns
+        await loadDoctorPortal();
+
+    } catch (error) {
+        console.error('Error adding medicine:', error);
+        message.textContent = error.message;
+    }
+});
+
+// LOGIN FORM HANDLING
+
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const role = document.getElementById('loginRole').value;
+    const message = document.getElementById('loginMessage');
+
+    try {
+        const response = await fetch(`${API}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password, role })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            message.textContent = data.message;
+            message.style.color = 'red';
+            return;
+        }
+
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+
+        document.getElementById('loginScreen').style.display = 'none';
+document.querySelector('.layout').style.display = 'flex';
+
+// Role-based sidebar access
+const allowedPages = {
+    admin: null,
+    doctor: ['doctor-portal'],
+    patient: ['patient-portal']
+};
+
+document.querySelectorAll('.nav-btn').forEach(button => {
+    const page = button.dataset.page;
+
+    if (allowedPages[role] === null) {
+        button.style.display = '';
+    } else {
+        button.style.display =
+            allowedPages[role].includes(page) ? '' : 'none';
+    }
+});
+
+// Open the correct portal
+if (role === 'doctor') {
+    showPage('doctor-portal');
+} else if (role === 'patient') {
+    showPage('patient-portal');
+} else {
+    showPage('dashboard');
+}
+
+alert(`Welcome, ${data.user.name}!`);
+
+    } catch (error) {
+        message.textContent = 'Unable to connect to the server.';
+        message.style.color = 'red';
+    }
+});
+
+
+    // Initial page load
+    checkBackend();
+    loadDoctors();
+    loadAppointments();
+</script>
+</body>
+</html>
