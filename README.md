@@ -87,7 +87,7 @@ The database is designed to store different types of hospital information, inclu
 - Database Normalization
 - SQL Queries (INSERT, SELECT, UPDATE, DELETE)
 - Joins
-- Auto Increment
+- Auto increment
 
 ## System Architecture
 
